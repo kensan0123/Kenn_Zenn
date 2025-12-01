@@ -3,7 +3,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 from fastapi import HTTPException
-from app.core.settings import ROOT_DIR, ARTICLES_DIR, create_netrc
+from app.core.settings import ROOT_DIR, ARTICLES_DIR, create_netrc, ensure_git_identity
 from app.services.file_service import FileService
 
 @dataclass
@@ -17,6 +17,7 @@ class PublishService:
         self.root_dir = root_dir
 
     def publish_article(self, slug: str) -> PublishResult:
+        ensure_git_identity()
         create_netrc()
 
         # 対象ファイルを検索
