@@ -2,7 +2,11 @@ version: "3.9"
 
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        user_name: ${user_name}
+        user_email: ${user_email}
     ports:
       - "9000:9000"
     env_file:

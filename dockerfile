@@ -6,6 +6,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+ARG user_name
+ARG user_email
+
 # Install Node.js/npm for Zenn CLI and git for publish step
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl ca-certificates git nodejs npm \
@@ -14,6 +17,12 @@ RUN apt-get update \
 
 # Create .netrc for GitHub auth
 RUN touch /root/.netrc && chmod 600 /root/.netrc
+
+# Apply git config
+RUN : "${user_name:?Set user_name build-arg}" \
+    && : "${user_email:?Set user_email build-arg}" \
+    && git config --global user.name "$user_name" \
+    && git config --global user.email "$user_email"
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
