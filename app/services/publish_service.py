@@ -44,7 +44,7 @@ class PublishService:
         try:
             subprocess.run(["git", "add", "."], cwd=str(self.root_dir), check=True, capture_output=True)
             subprocess.run(["git", "commit", "-m", f"publish {article_title}"], cwd=str(self.root_dir), check=True, capture_output=True)
-            subprocess.run(["git", "push", "-u", "origin", "main"], cwd=str(self.root_dir), check=True, capture_output=True)
+            subprocess.run(["git", "push", "origin", "main"], cwd=str(self.root_dir), check=True, capture_output=True)
         except subprocess.CalledProcessError as e:
             print(f"git_result: {e}")
 
