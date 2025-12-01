@@ -2,7 +2,7 @@ import re
 import subprocess
 from pathlib import Path
 from typing import List
-from app.core.settings import ZENN_DIR, ARTICLES_DIR
+from app.core.settings import ROOT_DIR, ARTICLES_DIR
 from app.services.file_service import FileService
 
 class GenerateService:
@@ -50,7 +50,7 @@ class GenerateService:
                 "false",
             ]
         
-        subprocess.run(cmd, cwd=str(ZENN_DIR), check=True)
+        subprocess.run(cmd, cwd=str(ROOT_DIR), check=True)
 
         # CLI実行後ファイル一覧
         after_files = set(ARTICLES_DIR.glob("*.md"))

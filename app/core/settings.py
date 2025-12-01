@@ -24,4 +24,4 @@ def resolve_path(path_value: str | None, default: Path) -> Path:
 # Base path for git/Zenn workspace (can be overridden via env ROOT_DIR/ZENN_DIR)
 ROOT_DIR = resolve_path(os.getenv("ROOT_DIR"), PROJECT_ROOT)
 ZENN_DIR = resolve_path(os.getenv("ZENN_DIR"), ROOT_DIR / "zenn")
-ARTICLES_DIR = ZENN_DIR / "articles"
+ARTICLES_DIR = ROOT_DIR / "articles"
