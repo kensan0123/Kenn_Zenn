@@ -12,6 +12,9 @@ RUN apt-get update \
     && npm install -g zenn-cli \
     && rm -rf /var/lib/apt/lists/*
 
+# Create .netrc for GitHub auth
+RUN touch /root/.netrc && chmod 600 /root/.netrc
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 

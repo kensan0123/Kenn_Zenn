@@ -20,6 +20,24 @@ def resolve_path(path_value: str | None, default: Path) -> Path:
         path = PROJECT_ROOT / path
     return path.resolve()
 
+def create_netrc():
+    home = os.path.expanduser("~")
+    netrc_path = os.path.join(home, ".netrc")
+
+    content = "\n".join(
+        [
+            "machine github.com",
+            f"login {os.getenv('GITHUB_USER', '')}",
+            f"password {os.getenv('GITHUB_PAT', '')}",
+            "",
+        ]
+    )
+
+    with open(netrc_path, "w") as f:
+        f.write(content)
+
+    os.chmod(netrc_path, 0o600)
+
 
 # Base path for git/Zenn workspace (can be overridden via env ROOT_DIR/ZENN_DIR)
 ROOT_DIR = resolve_path(os.getenv("ROOT_DIR"), PROJECT_ROOT)

@@ -9,6 +9,8 @@ services:
       - .env
     environment:
       - ZENN_DIR=/app/zenn
+      - GITHUB_PAT=${GITHUB_PAT}
+      - GITHUB_USER=${GITHUB_USER}
     volumes:
       - .:/app
     command: uvicorn app.main:app --host 0.0.0.0 --port 9000 --reload

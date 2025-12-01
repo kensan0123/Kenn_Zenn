@@ -2,7 +2,8 @@ import subprocess
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from app.core.settings import ROOT_DIR, ARTICLES_DIR
+from fastapi import HTTPException
+from app.core.settings import ROOT_DIR, ARTICLES_DIR, create_netrc
 from app.services.file_service import FileService
 
 @dataclass
@@ -16,6 +17,8 @@ class PublishService:
         self.root_dir = root_dir
 
     def publish_article(self, slug: str) -> PublishResult:
+        create_netrc()
+
         # 対象ファイルを検索
         md_files = list(ARTICLES_DIR.glob(f"*{slug}*.md"))
         if not md_files:
@@ -44,9 +47,15 @@ class PublishService:
         try:
             subprocess.run(["git", "add", "."], cwd=str(self.root_dir), check=True, capture_output=True, text=True)
             subprocess.run(["git", "commit", "-m", f"publish {article_title}"], cwd=str(self.root_dir), check=True, capture_output=True, text=True)
-            subprocess.run(["git", "push", "origin", "main"], cwd=str(self.root_dir), check=True, capture_output=True, text=True)
+            subprocess.run(["git", "push"], cwd=str(self.root_dir), check=True, capture_output=True, text=True)
+
         except subprocess.CalledProcessError as e:
-            print(f"git_result: {e}\nstdout: {e.stdout}\nstderr: {e.stderr}")
+            if "could not read Username" in e.stderr:
+                raise HTTPException(status_code=500, detail="GitHub credential missing. Configure PAT or SSH key.")
+            else:
+                print(f"git_result: {e}\nstdout: {e.stdout}\nstderr: {e.stderr}")
+                
             return PublishResult(False, article_slug)
+
 
         return PublishResult(True, article_slug)
