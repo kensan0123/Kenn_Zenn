@@ -2,7 +2,7 @@ import subprocess
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from app.core.settings import ZENN_DIR, ARTICLES_DIR
+from app.core.settings import ROOT_DIR, ARTICLES_DIR
 from app.services.file_service import FileService
 
 @dataclass
@@ -11,8 +11,9 @@ class PublishResult:
     slug: str
 
 class PublishService:
-    def __init__(self) -> None:
+    def __init__(self, root_dir: Path = ROOT_DIR) -> None:
         self.file_service = FileService()
+        self.root_dir = root_dir
 
     def publish_article(self, slug: str) -> PublishResult:
         # 対象ファイルを検索
@@ -40,8 +41,11 @@ class PublishService:
         article_slug: str = self.file_service.get_article_slug(article_path=article_path)
 
         # Git 連携
-        subprocess.run(["git", "add", "."], cwd=str(ZENN_DIR), check=True)
-        subprocess.run(["git", "commit", "-m", f"publish {article_title}"], cwd=str(ZENN_DIR), check=True)
-        subprocess.run(["git", "push"], cwd=str(ZENN_DIR), check=True)
+        try:
+            subprocess.run(["git", "add", "."], cwd=str(self.root_dir), check=True, capture_output=True)
+            subprocess.run(["git", "commit", "-m", f"publish {article_title}"], cwd=str(self.root_dir), check=True, capture_output=True)
+            subprocess.run(["git", "push", "-u", "origin", "main"], cwd=str(self.root_dir), check=True, capture_output=True)
+        except subprocess.CalledProcessError as e:
+            print(f"git_result: {e.stdout}")
 
         return PublishResult(True, article_slug)
