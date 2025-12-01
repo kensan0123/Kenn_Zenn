@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
+import subprocess
 
 # Base directory of this repository (app/core sits two levels below root)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -37,6 +38,10 @@ def create_netrc():
         f.write(content)
 
     os.chmod(netrc_path, 0o600)
+
+def ensure_git_identity():
+    subprocess.run(["git", "config", "--global", "user.email", f"{os.getenv('user_email')}"])
+    subprocess.run(["git", "config", "--global", "user.name", f"{os.getenv('user_name')}"])
 
 
 # Base path for git/Zenn workspace (can be overridden via env ROOT_DIR/ZENN_DIR)
