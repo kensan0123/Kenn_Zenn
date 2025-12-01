@@ -42,10 +42,11 @@ class PublishService:
 
         # Git 連携
         try:
-            subprocess.run(["git", "add", "."], cwd=str(self.root_dir), check=True, capture_output=True)
-            subprocess.run(["git", "commit", "-m", f"publish {article_title}"], cwd=str(self.root_dir), check=True, capture_output=True)
-            subprocess.run(["git", "push", "origin", "main"], cwd=str(self.root_dir), check=True, capture_output=True)
+            subprocess.run(["git", "add", "."], cwd=str(self.root_dir), check=True, capture_output=True, text=True)
+            subprocess.run(["git", "commit", "-m", f"publish {article_title}"], cwd=str(self.root_dir), check=True, capture_output=True, text=True)
+            subprocess.run(["git", "push", "origin", "main"], cwd=str(self.root_dir), check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as e:
-            print(f"git_result: {e}")
+            print(f"git_result: {e}\nstdout: {e.stdout}\nstderr: {e.stderr}")
+            return PublishResult(False, article_slug)
 
         return PublishResult(True, article_slug)
