@@ -1,0 +1,8 @@
+ROOT_DIR=.
+ZENN_DIR=./zenn
+
+GITHUB_PAT=
+GITHUB_USER=
+
+user_name=
+user_email=
