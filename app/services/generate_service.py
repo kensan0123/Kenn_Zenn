@@ -9,7 +9,7 @@ class GenerateService:
     def __init__(self) -> None:
         self.file_service = FileService()
 
-    def generate_article(self, title: str, emoji: str, content: str, slug: str | None = None):
+    def generate_article(self, title: str, emoji: str, content: str, type: str, slug: str | None = None):
         """
         Zenn CLIで新規記事を作成し
         自動生成された slug の md ファイルを特定して中身を書き換える
@@ -29,7 +29,7 @@ class GenerateService:
                 "--title",
                 title,
                 "--type",
-                "tech",
+                type,
                 "--emoji",
                 emoji,
                 "--published",
@@ -123,9 +123,9 @@ class GenerateService:
                 with Path(article_path).open("w") as f:
                     f.write(new_content)
                 
-                article_slug: str = self.file_service.get_article_slug(article_path=article_path)
+                slug: str = self.file_service.get_article_slug(article_path=article_path)
 
-                return article_slug
+                return slug
             else:
                 raise ValueError("topics: の行が見つかりません")
 

@@ -9,6 +9,7 @@ class GenerateRequest(BaseModel):
     title: str
     emoji: str
     content: str
+    type: str
     slug: str | None = None
 
 generate_service = GenerateService()
@@ -19,6 +20,7 @@ def generate_article_api(req: GenerateRequest):
         title=req.title,
         emoji=req.emoji,
         content=req.content,
+        type=req.type,
         slug=req.slug,
     )
     
