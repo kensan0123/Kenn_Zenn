@@ -1,6 +1,6 @@
 {
   "name": "Kenn_Zenn",
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": "../docker-compose.yml",
   "service": "app",
   "workspaceFolder": "/app",
   "overrideCommand": true,

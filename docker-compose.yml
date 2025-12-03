@@ -4,6 +4,7 @@ services:
   app:
     build:
       context: .
+      dockerfile: dockerfile
       args:
         user_name: ${user_name}
         user_email: ${user_email}
